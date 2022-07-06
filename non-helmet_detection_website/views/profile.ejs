@@ -1,0 +1,315 @@
+<%- include('../template/sidebar.ejs'); -%>
+    <main class="mt-5 pt-3">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <h4>ข้อมูลส่วนตัว</h4>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <!-- Profile picture card-->
+            <div class="card mb-4 mb-xl-0">
+                <div class="card-header">รูปโปรไฟล์</div>
+                <div class="card-body text-center">
+                    <!-- Profile picture image-->
+                    <!-- <img class="img-account-profile rounded-circle mb-2" src="http://bootdey.com/img/Content/avatar/avatar1.png" alt=""> -->
+                    
+                    <div name="Member_image" id="file" class="dropzone text-center shadow-sm" style="background-color:#ffff; border-color:#ced4da; border-radius: 1.25rem;">
+                      <div class="dz-default dz-message" style="height: 158px;">
+                          <span>
+                              <span style="font-size:15px;">
+                                  <!-- <i class="fas fa-cloud-upload-alt" style="margin-top: 43px; font-size:50px;"></i> -->
+                                  <img class="img-account-profile rounded-circle" src="http://bootdey.com/img/Content/avatar/avatar1.png" width="120" height="120">
+                                  <p>เปลี่ยนรูปโปรไฟล์</p>
+                              </span>
+                          </span>
+                      </div>
+                    </div>
+                      
+                  
+                </div>
+            </div>
+          </div>
+
+          <div class="col-md-8">
+            <div class="card mb-4">
+              <div class="card-header">ข้อมูลส่วนตัว</div>
+              <div class="card-body">
+                <form>
+                  <!-- Form Group (username)-->
+                  <div class="mb-3">
+                      <label class="small mb-1" for="inputEmail">อีเมล</label>
+                      <input class="form-control" id="formEmail" type="text" disabled>
+                  </div>
+                  <!-- Form Row-->
+                  <div class="row gx-3 mb-3 needs-validation " id="profile_validate">
+                      <!-- Form Group (first name)-->
+                      <div class="col-md-6">
+                          <label class="small mb-1" for="inputFirstName">ชื่อ</label>
+                          <input class="form-control" id="formFirstName" type="text" required>
+                          <div class="invalid-feedback">
+                            กรุณากรอกชื่อ
+                          </div>
+                      </div>
+                      <!-- Form Group (last name)-->
+                      <div class="col-md-6">
+                          <label class="small mb-1" for="inputLastName">นามสกุล</label>
+                          <input class="form-control" id="formLastName" type="text" required>
+                          <div class="invalid-feedback">
+                            กรุณากรอกนามสกุล
+                          </div>
+                      </div>
+                  </div>
+                </form>
+                <div class="row">
+                  <div class="text-end">
+                    <button class="btn btn-warning" id="btn-changePwd" type="button">เปลี่ยนรหัสผ่าน</button>
+                    <button class="btn btn-primary" id="btn-updateUserData" type="button">บันทึกการเปลี่ยนแปลง</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
+<script src="/public/javascripts/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
+<script src="/public/javascripts/jquery-3.5.1.js"></script>
+<script src="/public/javascripts/jquery.dataTables.min.js"></script>
+<script src="/public/javascripts/dataTables.bootstrap5.min.js"></script>
+<script type="text/javascript" src="../../node_modules/dropzone/dist/dropzone-min.js"></script>
+<script src="/public/javascripts/script.js"></script>
+<script type="text/javascript" src="/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+<script>
+  
+  var Feature = (function() {
+        var has_image = 0;
+        var countOrder = 0;
+        var image_file = '';
+              return {
+                  //function space
+                  initButton: function() {
+                    // submit profiles
+                    $('#btn-updateUserData').on('click', function (e) {
+                    const now = new Date();
+                    const offsetMs = now.getTimezoneOffset() * 60 * 1000;
+                    const dateLocal = new Date(now.getTime() - offsetMs);
+                    const str = dateLocal.toISOString().slice(0, 19).replace(/-/g, "/").replace("T", " ");
+                    dateNow = str;
+                    
+                    if ($('#formFirstName').val() != '' && $('#formLastName').val() != ''){
+                      Feature.submitUpdateUser();
+                    }else{
+                      $("#profile_validate").addClass("was-validated");
+                    }
+                    
+                  });
+                  },
+                  getProfile : function(){
+                    $.get("/profile/getUser", function(response){
+                      console.log(response.data[0]);
+                      $('#formEmail').val(response.data[0].email);
+                      $('#formFirstName').val(response.data[0].firstname);
+                      $('#formLastName').val(response.data[0].lastname);
+                      if (response.data[0].image_profile != null){
+                          console.log('g');
+                          var mockFile = {id: response.data[0].id, name: 'user.jpg', size: 102400 };
+                          dropzoneAdd.emit('addedfile', mockFile);
+                          var file_url = 'http://128.199.96.80:5000/profiles/' + response.data[0].image_profile;
+
+                          dropzoneAdd.emit('thumbnail', mockFile, file_url);
+                          dropzoneAdd.emit('complete', mockFile);
+                          dropzoneAdd.files.push(mockFile);
+                          
+                          var _this = $(this.element);
+                              _this.find('.dz-message').addClass('hidden'); 
+
+                          image_file = response.data[0].image_profile;        
+                        }
+                    });
+                  },
+                  initDropzone: function () {
+                    dropzoneAdd = new Dropzone('[name=Member_image]', {
+                      url: function () {
+                          return '/profile/UploadImageProfile';
+                          },
+                      paramName: "file",
+                      maxFiles: 1,
+                      maxFilesize: 10, // Max file size 25 mb
+                      addRemoveLinks: true,
+                      paralleluploads: 1,
+                      acceptedFiles: ".jpg,.png,.gif,.jpeg,.jfif",
+                      dictDefaultMessage: "",
+                      init: function () {
+                          this.on("thumbnail", function (file, fileUrl) {
+                              $('.dz-preview').last().find('img').attr({ width: '100%', height: '100%'});
+                          }),
+                            
+                          this.on("complete", function (file) {
+                              $(".dz-remove").html('<div class="btn btn-sm btn-danger shadow-sm w-100 mt-2"; style="border-radius: 15px;"><i class="fa fa-trash me-2"></i>ลบรูปภาพ</div>');
+                              //console.log(file)
+                          });
+                          this.on("processing", function (file) {
+                              $('.dz-message').hide();
+                          });  
+                          this.on("maxfilesexceeded", function(file){
+                              this.removeFile(file);
+                              var _ref;
+                              var _this = $(this.element);
+                              _this.find('.dz-message').hide();
+                                  Swal.fire ({
+                                      icon: 'warning',
+                                      title: 'คำเตือน',
+                                      text: 'ไม่สามารถอับโหลดรูปมากกว่า 1 รูปได้ กรุณาลองใหม่อีกครั้ง',
+                                      confirmButtonText: "ยืนยัน",
+                                      
+                                  }) .then((result) => {
+                                      if (result.isConfirmed) {
+                                          if (file.previewElement) {
+                                              if ((_ref = file.previewElement) != null) {
+                                              _ref.parentNode.removeChild(file.previewElement);
+                                              _this.find('.dz-message').hide();
+                                              // console.log(image_file);
+                                              }
+                                          }
+                                      } 
+                                  });
+                              });
+                          },
+                          success: function (file, response) {
+                              var jsonResult = (response);
+                              console.log(jsonResult)
+                                  if (jsonResult.fieldname == "file") {
+                                      file.previewElement.classList.add("dz-success");
+                                          image_file = jsonResult.filename;
+                                          has_image = 1;
+                                          // console.log(image_file);
+                                  }
+                                  else {
+                                      file.previewElement.classList.add("dz-error");
+                                  }
+                              },                           
+                              error: function (file, response) {
+                          },
+                          removedfile: function (file) {
+                              var _ref;
+                              var _this = $(this.element);
+                                  _this.find('.dz-message').hide();
+                              Swal.fire ({
+                                  icon: 'warning',
+                                  title: 'กรุณายืนยันการลบ',
+                                  text: 'เมื่อกด "ยืนยัน" จะทำการลบรูปโปรไฟล์',
+                                  showCancelButton: true,
+                                  confirmButtonText: "ยืนยัน",
+                                  cancelButtonText: "ยกเลิก",
+                              }) .then((result) => {
+                              if (result.isConfirmed) {
+                                  if (file.previewElement) {
+                                      if ((_ref = file.previewElement) != null) {
+                                      _ref.parentNode.removeChild(file.previewElement);
+                                      _this.find('.dz-message').show();
+                                      image_file = "";
+                                      console.log(image_file);
+                                      }
+                                  }
+                                  Feature.submitRemoveImage();
+                              } else {
+                                  _this.addClass('dz-started');
+                                  image_file = 1;
+                              }
+                          });
+                      }
+                    });
+                  },
+                  submitSendImage: function () {
+                      var url = '/profile/UploadImageProfile?post=true';
+                      console.log(image_file);
+                          $.ajax({
+                              type: 'POST',
+                              url: url,
+                              data: { 
+                                      filename : image_file,
+                                  } 
+                          }) .done(function(response) {
+                              Swal.fire({
+                                  title: "สำเร็จ",
+                                  text: "บันทึกข้อมูลสำเร็จ ",
+                                  icon: "success",
+                                  confirmButtonText: "ตกลง",
+                              }).then((result) => {
+                                  if (result.isConfirmed) {
+                                      window.location.reload();
+                                  }
+                              });
+                          });
+                  },
+
+                  submitRemoveImage: function () {
+                    var url = '/profile/UploadImageProfile?clrimage='+ image_file;
+                    image_file = "";
+                    $.ajax({
+                            type: 'POST',
+                            url: url,
+                        })
+                  },
+                  submitUpdateUser: function () {
+                    const now = new Date();
+                    const offsetMs = now.getTimezoneOffset() * 60 * 1000;
+                    const dateLocal = new Date(now.getTime() - offsetMs);
+                    const str = dateLocal.toISOString().slice(0, 19).replace(/-/g, "/").replace("T", " ");
+                    dateNow = str;
+                    $.ajax({
+                      type: 'POST',
+                      url: '/profile/postUpdateUser',
+                      data: { 
+                        firstname : $('#formFirstName').val(),
+                        lastname : $('#formLastName').val(),
+                        date : dateNow
+                      } 
+                    })
+                    .done(function(response) {
+                      console.log(response);
+                      if (response.status == "Succeed") {
+                        if (has_image == 1) {
+                            Feature.submitSendImage();
+                        } else {
+                          Swal.fire({
+                              title: "บันทึกสำเร็จ",
+                              icon: "success",
+                              confirmButtonText: "ตกลง",
+                          }).then((result) => {
+                              if (result.isConfirmed) {
+                                  window.location.reload();
+                              }
+                          });    
+                        }
+                      } else if (response.status == "Failed") {
+                        Swal.fire({
+                            title: "มีผิดพลาด",
+                            text: "กรุณาลองใหม่อีกครั้ง",
+                            icon: "error",
+                            confirmButtonText: "ตกลง",
+                        });
+                      } else {
+                        Swal.fire({
+                            title: "error 500",
+                            icon: "error",
+                            confirmButtonText: "ตกลง",
+                        });
+                      }
+                    })
+                  }
+              }
+          })();
+
+  jQuery(document).ready(function() {
+      Feature.initButton();
+      Feature.getProfile();
+      Feature.initDropzone();
+  });
+</script>

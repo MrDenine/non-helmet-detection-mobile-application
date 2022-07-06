@@ -1,0 +1,296 @@
+<%- include('../template/sidebar.ejs'); -%>
+    <main class="mt-5 pt-3">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <!-- <h4>ข้อมูล</h4> -->
+          </div>
+        </div>
+        <div class="row text-center">
+
+          <div class="col-md-6 mb-4" >
+            <div class="card h-100">
+              <div class="card-header">
+                <span class="me-2"><i class="bi bi-bar-chart-fill"></i></span>
+                จำนวนรถจักรยานยนต์ที่คุณตรวจจับได้
+              </div>
+              <div class="card-body">
+                <canvas id="myChart1" ></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-4 "id="card-2">
+            <div class="card h-100">
+              <div class="card-header">
+                <span class="me-2"><i class="bi bi-bar-chart-fill"></i></span>
+                จำนวนรถจักรยานยนต์ที่ถูกตรวจจับทั้งหมดในระบบ
+              </div>
+              <div class="card-body">
+                <canvas id="myChart2" ></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="col-md-4 mb-4">
+            <div class="card bg-success text-white h-100">
+              <div class="card-body py-5">Success Card</div>
+              <div class="card-footer d-flex">
+                View Details
+                <span class="ms-auto">
+                  <i class="bi bi-chevron-right"></i>
+                </span>
+              </div>
+            </div>
+          </div> -->
+
+        </div>
+          <div class="row">
+            <!-- table -->
+            <div class="col-md-12 mb-3">
+              <div class="card">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <h5 class="pt-2">ตารางข้อมูลตรวจจับที่ผู้ใช้อัพโหลด</h5>
+                    </div>
+                  </div>
+                </div>
+                  <div class="table-responsive">
+                    <table id="table-obj-id" class="table table-striped my-2" style="width: 100%">
+                      <thead class="table-navy-brown">
+                        <tr>
+                          <th class="text-center">รูป</th>
+                          <th class="text-center">ละติจูด</th>
+                          <th class="text-center">ลองจิจูด</th>
+                          <th class="text-center">สถานะ</th>
+                          <th class="text-center">เวลาที่ตรวจจับได้</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </main>
+    <!-- dashboard script -->
+    
+  </body>
+</html>
+<script src="/public/javascripts/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
+<script src="/public/javascripts/jquery-3.5.1.js"></script>
+<script src="/public/javascripts/jquery.dataTables.min.js"></script>
+<script src="/public/javascripts/dataTables.bootstrap5.min.js"></script>
+<script src="/public/javascripts/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  var Feature = (function() {
+    var htmlcard_1 = '';
+    var htmlcard_2 = '';
+
+    function appendHtml(el, str) {
+      var div = document.createElement('div'); //container to append to
+      div.innerHTML = str;
+      while (div.children.length > 0) {
+        el.appendChild(div.children[0]);
+      }
+    }
+
+    var dataTable = $('#table-obj-id').DataTable({
+        language: {emptyTable: "ไม่พบข้อมูล"},
+          searching: false,
+          initComplete: function (settings, json) {  
+              $("#table-obj-id").wrap("<div style='overflow:auto; width:100%; position:relative; min-height: 708px; max-height: 708px; background-color: #F9F9F9; margin-bottom: 5px;'></div> ");            
+          },
+          ordering: false,
+          lengthChange: false,
+          paging: false,
+          bAutoWidth: false,
+          columns:[
+            {
+              data : function(data){
+                return '<img class="logo" src="http://128.199.96.80:5000/detectedImage/' +data['image_detection']+' " style="height:320px;width:160px;"/>';
+              },
+              className : 'text-center',
+            },
+            {
+              data : function(data){
+                return data['latitude'];
+              },
+              className : 'text-center',
+            },
+            {
+              data : function(data){
+                return data['longitude'];
+              },
+              className : 'text-center',
+            },
+            
+            {
+              data : function(data){
+                switch(data['status']) {
+                  case 10:
+                    return "“ยังไม่ถูกพิจารณา”";
+                    break;
+                  case 20:
+                    return "“ถูกพิจารณาแล้ว”";
+                    break;
+                  case 30:
+                    return "“ถูกดำเนินคดีแล้ว”";
+                    break;
+                  default:
+                    return "“ไม่สามารถตรวจสอบได้”";
+                }
+              },
+              className : 'text-center',
+            },
+            {
+              data : function(data){
+                var date = new Date(data['detection_at']).toLocaleDateString();
+                var time = new Date(data['detection_at']).toLocaleTimeString('th', {
+                                        timeZone: 'Asia/Jakarta',
+                                        timeStyle: 'short',
+                                        hour12: false,
+                                    });
+                return date + ' ' + time;
+              },
+              className : 'text-center',
+            },
+          ],
+          serverSide: true,
+          ajaxSource: '/dashboard/getobjuser',
+          serverData: function (sSource, aaData, fnCallback, oSettings) {
+                // aaData.push({ "name": "search", "value": aaSearch});
+                oSettings.jqXHR = $.ajax({
+                    dataType: 'json',
+                    type: "POST",
+                    url: sSource,
+                    data: aaData,
+                    success: function (response) {
+                        if (response.status === "Succeed") {
+                          var response = response.data;
+                              response = {"aaData": response, "iTotalRecords": response.length, "iTotalDisplayRecords": response.length};
+
+                        } else {
+                            response = {"aaData":[], "iTotalRecords": 0, "iTotalDisplayRecords": 0};
+                        }
+                        fnCallback(response);
+                    }
+                });
+            },
+        });
+              return {
+                  //function space
+                  initCard: function() {
+
+                  },
+                  getStatistics : function(){
+                    $.get('/dashboard/getcount', function(response){
+                      console.log(response.data);
+                      const ctx = document.getElementById('myChart1').getContext('2d');
+                      const myChart = new Chart(ctx, {
+                          type: 'bar',
+                          data: {
+                              labels: ['09/04/2022', '10/04/2022', '11/04/2022', '12/04/2022', '13/04/2022', '14/04/2022'],
+                              datasets: [{
+                                  label: 'จำนวนคัน',
+                                  data: [2, 9, 0, 0, 0, 3],
+                                  backgroundColor: [
+                                      'rgba(255, 99, 132, 0.2)',
+                                      'rgba(54, 162, 235, 0.2)',
+                                      'rgba(255, 206, 86, 0.2)',
+                                      'rgba(75, 192, 192, 0.2)',
+                                      'rgba(153, 102, 255, 0.2)',
+                                      'rgba(255, 159, 64, 0.2)'
+                                  ],
+                                  borderColor: [
+                                      'rgba(255, 99, 132, 1)',
+                                      'rgba(54, 162, 235, 1)',
+                                      'rgba(255, 206, 86, 1)',
+                                      'rgba(75, 192, 192, 1)',
+                                      'rgba(153, 102, 255, 1)',
+                                      'rgba(255, 159, 64, 1)'
+                                  ],
+                                  borderWidth: 1
+                              }]
+                          },
+                          options: {
+                              scales: {
+                                  y: {
+                                      beginAtZero: true
+                                  }
+                              }
+                          }
+                      });
+
+
+                      const ctx2 = document.getElementById('myChart2').getContext('2d');
+                      const myChart2 = new Chart(ctx2, {
+                          type: 'bar',
+                          data: {
+                              labels: ['09/04/2022', '10/04/2022', '11/04/2022', '12/04/2022', '13/04/2022', '14/04/2022'],
+                              datasets: [{
+                                  label: 'จำนวนคัน',
+                                  data: [8, 0, 0, 3, 2, 2],
+                                  backgroundColor: [
+                                      'rgba(255, 99, 132, 0.2)',
+                                      'rgba(255, 99, 132, 0.2)',
+                                      'rgba(255, 99, 132, 0.2)',
+                                      'rgba(255, 99, 132, 0.2)',
+                                      'rgba(255, 99, 132, 0.2)',
+                                      'rgba(255, 99, 132, 0.2)'
+                                  ],
+                                  borderColor: [
+                                      'rgba(255, 99, 132, 1)',
+                                      'rgba(255, 99, 132, 1)',
+                                      'rgba(255, 99, 132, 1)',
+                                      'rgba(255, 99, 132, 1)',
+                                      'rgba(255, 99, 132, 1)',
+                                      'rgba(255, 99, 132, 1)'
+                                  ],
+                                  borderWidth: 1
+                              }]
+                          },
+                          options: {
+                              scales: {
+                                  y: {
+                                      beginAtZero: true
+                                  }
+                              }
+                          }
+                      });
+                    //   var htmlcard_1 = `<div class="card bg-light text-dark h-100">
+                    //   <h5 class="card-header">จำนวนรถจักรยานยนต์ที่คุณตรวจจับได้</h5>
+                    //   <div class="card-body py-2">
+                    //     <p class="card-text">วันนี้ ${response.data.countMeRider.today} คัน</p>
+                    //     <p class="card-text">สัปดาห์นี้ ${response.data.countMeRider.toweek} คัน</p>
+                    //     <p class="card-text">เดือนนี้ ${response.data.countMeRider.tomonth} คัน</p>
+                    //     <p class="card-text">ทั้งหมด ${response.data.countMeRider.total} คัน</p>
+                    //   </div>
+                    // </div>`;
+                    // var htmlcard_2 = `<div class="card bg-light text-dark h-100">
+                    // <h5 class="card-header">จำนวนรถจักรยานยนต์ที่ถูกตรวจจับทั้งหมดในระบบ</h5>
+                    // <div class="card-body py-2">
+                    //   <p class="card-text">วันนี้ ${response.data.countAllRider.today} คัน</p>
+                    //     <p class="card-text">สัปดาห์นี้ ${response.data.countAllRider.toweek} คัน</p>
+                    //     <p class="card-text">เดือนนี้ ${response.data.countAllRider.tomonth} คัน</p>
+                    //     <p class="card-text">ทั้งหมด ${response.data.countAllRider.total} คัน</p>
+                    // </div>
+                    // </div>`;
+                    // appendHtml(document.getElementById("card-1"), htmlcard_1);
+                    // appendHtml(document.getElementById("card-2"), htmlcard_2);
+                    // // document.getElementById("card-1").appendChild(htmlcard_1);
+                    // // document.getElementById("card-1").appendChild(htmlcard_2);
+                    });
+                  }
+              }
+          })();
+
+  jQuery(document).ready(function() {
+      Feature.getStatistics();
+  });
+</script>

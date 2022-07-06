@@ -1,0 +1,389 @@
+<%- include('../template/sidebar.ejs'); -%>
+    <main class="mt-5 pt-3">
+      <div class="container-fluid">
+        <!-- title -->
+        <!-- <div class="row">
+            <div class="col-md-12">
+              <h4 id="top">หน้าจัดการข้อมูลบุคคลที่ไม่สวมใส่หมวกนิรภัย</h4>
+            </div>
+        </div> -->
+        <!-- form -->
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card shadow-sm mb-3 collapse" id="ObjectForm">
+              <div class="card-header">ข้อมูลบุคคลที่ไม่สวมใส่หมวกนิรภัย</div>
+                <div class="card-body">
+                    <div class="row mx-5" id="dataform_validate">
+                        <div class="col-md-5">
+                          <div class="row mb-3">
+                            <div name="Member_image" id="image_file_id" class="dropzone text-center shadow-sm" style="background-color:#ffff; border-color:#ced4da; border-radius: 1.25rem;">
+                                <!-- <img class="logo" src="http://128.199.96.80:5000/detectedImage/rider_1021647076764667.jpg" style="height:320px;width:160px;"> -->
+                            </div>
+                            <label class="form-label text-center">รูปภาพ</label>
+                        </div>
+                    </div>
+                    <!-- form -->
+                    <div class="col-md-7"> 
+                      <div class="row mb-3 " id="obj_validate">
+                        <div class="col-lg-6">
+                          <label class="form-label">ป้ายทะเบียน</label>
+                          <div class="input-group">
+                              <input type="text" class="form-control shadow-sm rounded-3" id="licence-plate_id" required>
+                              <div class="invalid-feedback">
+                                กรุณาระบุ หมายเลขทะเบียน
+                              </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                          <label class="form-label">สถานะตรวจสอบ</label>
+                          <select class="form-select" id="status_id" name="select-status">
+                            <!-- <option selected>...</option> -->
+                            <option value="10">“ยังไม่ถูกพิจารณา”</option>
+                            <option value="20">“ถูกพิจารณาแล้ว”</option>
+                            <option value="30">“ถูกดำเนินคดีแล้ว”</option>
+                            <option value="40">“ไม่สามารถตรวจสอบได้”</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="row mb-3" >
+                        <div class="col-lg-12">
+                          <label class="form-label">หมายเหตุ</label>
+                          <div class="input-group">
+                              <!-- <input type="text" class="form-control shadow-sm rounded-3 " id="description_id" > -->
+                              <textarea class="form-control shadow-sm rounded-3" rows="7" id="description_id"></textarea>
+                              <div class="invalid-feedback">
+                                กรุณาระบุ หมายเหตุ
+                              </div>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                    <hr class="mb-3">
+                        <div class="col-md-12 text-end">
+                            <div class="btn btn-outline-secondary shadow-sm" id="cancel_detection"><i class="fas fa-times me-2"></i>ยกเลิก</div>
+                            <div class="btn btn-success shadow-sm" id="submit_detection"><i class="fas fa-save me-2"></i>บันทึก</div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- table -->
+        <div class="row my-3">
+          <div class="col-md-12 mb-3">
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h5 class="pt-2">ตารางข้อมูลบุคคลที่ไม่สวมใส่หมวกนิรภัย</h5>
+                  </div>
+                  <div class="col-md-3 mb-3">
+                      <input type="text" class="form-control shadow-sm" id="equipmentSearch" placeholder="ค้นหาข้อมูลป้ายทะเบียน">
+                  </div>
+                  <div class="col-md-2 mb-3">
+                      <div class="btn btn-outline-secondary shadow-sm" id="search-clear"><i class="fas fa-times me-2"></i>ยกเลิก</div>
+                      <div class="btn btn-success shadow-sm" id="search"><i class="fas fa-search me-2"></i>ค้นหา</div>
+                  </div>
+                </div>
+                <div class="table-responsive">
+                  <table id="table-detection-id" class="table table-striped my-2" style="width: 100%">
+                    <thead class="table-navy-brown">
+                      <tr>
+                        <th class="text-center">ผลลัพธ์</th>
+                        <th class="text-center">ป้ายทะเบียน</th>
+                        <th class="text-center">พิกัด</th>
+                        <th class="text-center">วันเวลาที่ตรวจจับ</th>
+                        <th class="text-center">ผู้ส่ง</th>
+                        <th class="text-center">สถานะ</th>
+                        <th class="text-center">จัดการข้อมูล</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+  
+
+</html>
+<script type="text/javascript" src="/node_modules/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="/node_modules/datatables.net/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="/node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+
+<script>
+  var Feature = (
+    function(){
+      var aaSearch = "";
+      var obj_id_update = 0;
+      var dataTable = $('#table-detection-id').DataTable({
+          language: {emptyTable: "ไม่พบข้อมูลตรวจจับ"},
+          searching: false,
+          initComplete: function (settings, json) {  
+              $("#table_id").wrap("<div style='overflow:auto; width:100%; position:relative; min-height: 708px; max-height: 708px; background-color: #F9F9F9; margin-bottom: 5px;'></div> ");            
+          },
+          ordering: false,
+          lengthChange: false,
+          paging: false,
+          bAutoWidth: false,
+          columns:[
+            {
+              data : function(data){
+                return '<img class="logo" src="http://128.199.96.80:5000/detectedImage/' +data['image_detection']+' " style="height:320px;width:160px;"/>';
+              },
+              className : 'text-center',
+            },
+            {
+              data : function(data){
+                return data['licence_number'];
+              },
+              className : 'text-center',
+            },
+            {
+              data : function(data){
+                return data['latitude'] + ' , ' + data['longitude'];
+              },
+              className : 'text-center',
+            },
+            {
+              data : function(data){
+                var date = new Date(data['detection_at']).toLocaleDateString();
+                var time = new Date(data['detection_at']).toLocaleTimeString('th', {
+                                        timeZone: 'Asia/Jakarta',
+                                        timeStyle: 'short',
+                                        hour12: false,
+                                    });
+                return date + ' ' + time;
+              },
+              className : 'text-center',
+            },
+            {
+              data : function(data){
+                return data['firstname'] + ' ' + data['lastname'];
+              },
+              className : 'text-center',
+            },
+            {
+              data : function(data){
+                switch(data['status']) {
+                  case 10:
+                    return "“ยังไม่ถูกพิจารณา”";
+                    break;
+                  case 20:
+                    return "“ถูกพิจารณาแล้ว”";
+                    break;
+                  case 30:
+                    return "“ถูกดำเนินคดีแล้ว”";
+                    break;
+                  default:
+                    return "“ไม่สามารถตรวจสอบได้”";
+                }
+              },
+              className : 'text-center',
+            },
+            { 
+              data: function (data) {
+                  var setButton = ""
+                      setButton = '<a class="btn btn-danger btn-sm shadow-sm" name="delete_data" data-id="' + data['id'] + '"><i class="fas fa-trash me-2"></i>ลบ</a>\
+                                    <a class="btn btn-warning btn-sm shadow-sm" name="edit_data" data-id="' + data['id'] + '"data-image = "'+data['image_detection']+'" data-status="' + data['status'] + '" data-licence-number="' + data['licence_number'] + '">\
+                                    <i class="fas fa-pen me-2"></i>แก้ไข</a>'; 
+                  return setButton;
+              },
+              className : 'text-center',
+            },
+          ],
+          serverSide: true,
+          ajaxSource: '/detection-result/search',
+          serverData: function (sSource, aaData, fnCallback, oSettings) {
+                aaData.push({ "name": "search", "value": aaSearch});
+                oSettings.jqXHR = $.ajax({
+                    dataType: 'json',
+                    type: "POST",
+                    url: sSource,
+                    data: aaData,
+                    success: function (response) {
+                        if (response.status === "Succeed") {
+                            // if (response.data === "No information") {
+                            //     response = {"aaData":[], "iTotalRecords": 0, "iTotalDisplayRecords": 0};
+                            // } else {
+                                var response = response.data;
+                                    response = {"aaData": response, "iTotalRecords": response.length, "iTotalDisplayRecords": response.length};
+                            // }
+                        } else {
+                            response = {"aaData":[], "iTotalRecords": 0, "iTotalDisplayRecords": 0};
+                        }
+                        fnCallback(response);
+                    }
+                });
+          },
+      });
+          
+      return {
+          initialButton: function () {
+            //Edit in dataTable 
+            $('#table-detection-id').on('click', '[name="edit_data"]', function () {
+                    var data = $(this).data();
+                    location.href = "#top";
+                    if ($('#ObjectForm').is('.collapse:not(.show)')) { // not show
+                        $('#ObjectForm').collapse("toggle");
+                    }
+                    // set value
+                    obj_id_update = data.id;
+                    $('#licence-plate_id').val(data.licenceNumber);
+                    $('#status_id').val(data.status);
+                    var element =  document.getElementById('img-detect_id');
+                    console.log(element);
+                    if (typeof(element) == 'undefined' || element == null)
+                    {
+                      var img = document.createElement("img");
+                      img.src = 'http://128.199.96.80:5000/detectedImage/' + data.image;
+                      img.width = '160';
+                      img.height = '320';
+                      img.className = "logo";
+                      img.id = 'img-detect_id'
+                      document.getElementById("image_file_id").appendChild(img);
+                    }
+                });
+                
+            //deleteButton on table
+            $('#table-detection-id').on('click', '[name="delete_data"]', function () {
+                    var data = $(this).data();
+                        id_remove = data.id;
+                        Swal.fire ({
+                                icon: 'warning',
+                                title: 'กรุณายืนยันการลบ',
+                                text: 'เมื่อกด "ยืนยัน" ระบบจะทำการลบข้อมูล',
+                                showCancelButton: true,
+                                confirmButtonText: "ยืนยัน",
+                                cancelButtonText: "ยกเลิก",
+                            }) .then((result) => {
+                            if (result.isConfirmed) {
+                                Feature.submitRemoveObject();
+                            } else {
+                                swal.close()
+                            }
+                        });
+                });
+            $('#search-clear').on('click', function (e) {
+              $('#equipmentSearch').val('');
+            });
+
+            $('#search').on('click', function (e) {
+              
+            });
+            $('#submit_detection').on('click', function (e) {
+                const now = new Date();
+                const offsetMs = now.getTimezoneOffset() * 60 * 1000;
+                const dateLocal = new Date(now.getTime() - offsetMs);
+                const str = dateLocal.toISOString().slice(0, 19).replace(/-/g, "/").replace("T", " ");
+                dateNow = str;
+                if ($('#licence-plate_id').val() != ''){
+                  Feature.submitUpdateObj();
+                }else{
+                  $("#obj_validate").addClass("was-validated");
+                }
+                    
+                });
+
+            $('#cancel_detection').on('click', function (e) {
+                if ($('#ObjectForm').is('.collapse.show')) { // show
+                        $('#ObjectForm').collapse("toggle"); 
+                        $("#obj_validate").removeClass("was-validated");
+                }
+                    // clear value
+                    $('#licence-plate_id').val('');
+                    $('#img-detect_id').remove();
+                });
+              
+          },
+          submitUpdateObj: function () {
+                const now = new Date();
+                  const offsetMs = now.getTimezoneOffset() * 60 * 1000;
+                  const dateLocal = new Date(now.getTime() - offsetMs);
+                  const str = dateLocal.toISOString().slice(0, 19).replace(/-/g, "/").replace("T", " ");
+                  dateNow = str;
+                
+                    $.ajax({
+                            type: 'POST',
+                            url: '/detection-result/submit',
+                            data: { 
+                              obj_id : obj_id_update,
+                              status : $('#status_id').val(),
+                              licence_number : $('#licence-plate_id').val(),
+                              description : $('#description_id').val(),
+                              datetime : dateNow,
+                            } 
+                        })
+                    .done(function(response) {
+                      console.log(response.data);
+                        if (response.status == "Succeed") {
+                            
+                          Swal.fire({
+                              title: "สำเร็จ",
+                              text: "บันทึกการแก้ไขข้อมูลสำเร็จ ",
+                              icon: "success",
+                              confirmButtonText: "ตกลง",
+                          }).then((result) => {
+                              if (result.isConfirmed) {
+                                  window.location.reload();
+                              }
+                          });    
+                        } 
+                    });
+          },
+          submitRemoveObject: function () {
+            const _now = new Date();
+            const _offsetMs = _now.getTimezoneOffset() * 60 * 1000;
+            const _dateLocal = new Date(_now.getTime() - _offsetMs);
+            const datenow = _dateLocal.toISOString().slice(0, 19).replace(/-/g, "/").replace("T", " ");
+            console.log(datenow);
+            // var url = '/regisMember/PostDeleteMember';
+            // $.ajax({
+            //         type: 'POST',
+            //         url: url,
+            //         data: { 
+            //                 id : id_remove,
+            //                 datetime : dateNow
+            //               } 
+            //     })
+            // .done(function(response) {
+            //     if (response.status == "Succeed") {
+            //         Swal.fire({
+            //             title: "สำเร็จ",
+            //             text: "บันทึกข้อมูลการลบข้อมูลบุคลากรสำเร็จ",
+            //             icon: "success",
+            //             confirmButtonText: "ตกลง",
+            //         }).then((result) => {
+            //             if (result.isConfirmed) {
+            //                 window.location.reload();
+            //             }
+            //         });
+                    
+            //     } else if (response.status == "Failed") {
+            //         Swal.fire({
+            //             title: "ผิดพลาด",
+            //             text: "ไม่สามารถบันทึกการลบข้อมูลบุคลากรได้ กรุณาลองใหม่อีกครั้ง ",
+            //             icon: "error",
+            //             confirmButtonText: "ตกลง",
+            //         });
+            //     }
+            // });
+          },
+      }
+  })();
+
+  jQuery(document).ready(function () {
+    Feature.initialButton();
+  });  
+</script>

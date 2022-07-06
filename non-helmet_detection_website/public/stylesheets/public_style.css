@@ -1,0 +1,23 @@
+/* table */
+.table-navy-brown {
+  background-color: #524a4e;
+  color: #fff;
+}
+
+table.dataTable > thead > tr > th {
+  border-bottom-width: 0;
+  color: #ffffff;
+  font-weight: 600;
+  vertical-align: middle;
+  padding-left: 18px;
+  text-align: center;
+}
+
+table.dataTable > tbody td {
+  color: #444444;
+  font-size: 16px;
+  word-break: break-word;
+  border-color: #e8e8e8;
+  text-align: center;
+  vertical-align: middle;
+}

@@ -1,0 +1,33 @@
+body,
+html {
+  height: 100%;
+}
+.container {
+  height: 100%;
+}
+header {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    url("../images/index_traffic.jpg");
+  height: 100vh;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.title h1 {
+  color: #fff;
+  font-size: 70px;
+}
+/* .btn-signin {
+  border: 1px;
+  background-color: #fff;
+  padding: 10px 30px;
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+}
+
+.btn-register {
+  border: 1px solid #fff;
+  padding: 10px 30px;
+  color: #fff;
+  text-decoration: none;
+} */

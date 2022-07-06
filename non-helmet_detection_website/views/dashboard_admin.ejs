@@ -1,0 +1,332 @@
+<%- include('../template/sidebar.ejs'); -%>
+    <main class="mt-5 pt-3">
+      <div class="container-fluid">
+        <div class="row">
+          
+        </div>
+        <div class="row">
+          <div class="col-md-4 mb-4"></div>
+          <div class="col-md-4 mb-4">
+            <div class="card bg-light text-dark h-100">
+              <h5 class="card-header">จำนวนข้อมูลตรวจจับทั้งหมด</h5>
+              <div class="card-body  py-2"id="card-total">
+                <canvas id="myChart1" ></canvas>
+              </div>
+              
+            </div>
+            <div class="col-md-4 mb-4"></div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <div class="card bg-light text-dark h-100">
+              <h5 class="card-header">“ยังไม่ถูกพิจารณา”</h5>
+              <div class="card-body  py-2" id="card-0">
+                <canvas id="myChart2" ></canvas>
+              </div>
+              
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-4">
+            <div class="card bg-light text-dark h-100">
+              <h5 class="card-header">“ถูกพิจารณาแล้ว”</h5>
+              <div class="card-body  py-2"id="card-1">
+                <canvas id="myChart3" ></canvas>
+              </div>
+              
+            </div>
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <div class="card bg-light text-dark h-100">
+              <h5 class="card-header">“ถูกดำเนินคดีแล้ว”</h5>
+              <div class="card-body  py-2"id="card-2">
+                <canvas id="myChart4" ></canvas>
+              </div>
+              
+            </div>
+          </div>
+          <div class="col-md-6 mb-4">
+            <div class="card bg-light text-dark h-100">
+              <h5 class="card-header">“ไม่สามารถตรวจสอบได้”</h5>
+              <div class="card-body py-2"id="card-3">
+                <canvas id="myChart5" ></canvas>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+    </main>
+    <!-- dashboard script -->
+    
+  </body>
+</html>
+<script src="/public/javascripts/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
+<script src="/public/javascripts/jquery-3.5.1.js"></script>
+<script src="/public/javascripts/jquery.dataTables.min.js"></script>
+<script src="/public/javascripts/dataTables.bootstrap5.min.js"></script>
+<script src="/public/javascripts/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  var Feature = (function() {
+              function appendHtml(el, str) {
+                var div = document.createElement('div'); //container to append to
+                div.innerHTML = str;
+                while (div.children.length > 0) {
+                  el.appendChild(div.children[0]);
+                }
+              }
+              //global space
+              // var date = new Date();
+              // var datetime = date.getFullYear()+ "-" +
+              //         ("0" + (date.getUTCMonth()+1)).slice(-2) + "-" +
+              //         ("0" + date.getUTCDate()).slice(-2) + " " +
+              //         ("0" + date.getUTCHours()).slice(-2) + ":" +
+              //         ("0" + date.getUTCMinutes()).slice(-2) + ":" +
+              //         ("0" + date.getUTCSeconds()).slice(-2);
+              return {
+                  //function space
+                  init: function() {
+                  },
+                  getStatistics : function(){
+
+
+
+                    
+                    $.get('/dashboard/getstatistic', function(response){
+                      console.log(response.data[0]);
+
+
+                      const ctx = document.getElementById('myChart1').getContext('2d');
+                      const myChart = new Chart(ctx, {
+                          type: 'bar',
+                          data: {
+                              labels: ['09/04/2022', '10/04/2022', '11/04/2022', '12/04/2022', '13/04/2022', '14/04/2022'],
+                              datasets: [{
+                                  label: 'จำนวนคัน',
+                                  data: [8, 0, 0, 3, 2, 2],
+                                  backgroundColor: [
+                                      'rgba(255, 99, 132, 0.2)',
+                                      'rgba(255, 99, 132, 0.2)',
+                                      'rgba(255, 99, 132, 0.2)',
+                                      'rgba(255, 99, 132, 0.2)',
+                                      'rgba(255, 99, 132, 0.2)',
+                                      'rgba(255, 99, 132, 0.2)'
+                                  ],
+                                  borderColor: [
+                                      'rgba(255, 99, 132, 1)',
+                                      'rgba(255, 99, 132, 1)',
+                                      'rgba(255, 99, 132, 1)',
+                                       'rgba(255, 99, 132, 1)',
+                                      'rgba(255, 99, 132, 1)',
+                                      'rgba(255, 99, 132, 1)'
+                                  ],
+                                  borderWidth: 1
+                              }]
+                          },
+                          options: {
+                              scales: {
+                                  y: {
+                                      beginAtZero: true
+                                  }
+                              }
+                          }
+                      });
+
+                      const ctx2 = document.getElementById('myChart2').getContext('2d');
+                      const myChart2 = new Chart(ctx2, {
+                          type: 'bar',
+                          data: {
+                              labels: ['09/04/2022', '10/04/2022', '11/04/2022', '12/04/2022', '13/04/2022', '14/04/2022'],
+                              datasets: [{
+                                  label: 'จำนวนคัน',
+                                  data: [2, 10, 3, 0, 4, 3],
+                                  backgroundColor: [
+                                      'rgba(255, 99, 132, 0.2)',
+                                      'rgba(54, 162, 235, 0.2)',
+                                      'rgba(255, 206, 86, 0.2)',
+                                      'rgba(75, 192, 192, 0.2)',
+                                      'rgba(153, 102, 255, 0.2)',
+                                      'rgba(255, 159, 64, 0.2)'
+                                  ],
+                                  borderColor: [
+                                      'rgba(255, 99, 132, 1)',
+                                      'rgba(54, 162, 235, 1)',
+                                      'rgba(255, 206, 86, 1)',
+                                      'rgba(75, 192, 192, 1)',
+                                      'rgba(153, 102, 255, 1)',
+                                      'rgba(255, 159, 64, 1)'
+                                  ],
+                                  borderWidth: 1
+                              }]
+                          },
+                          options: {
+                              scales: {
+                                  y: {
+                                      beginAtZero: true
+                                  }
+                              }
+                          }
+                      });
+
+                      const ctx3 = document.getElementById('myChart3').getContext('2d');
+                      const myChart3 = new Chart(ctx3, {
+                          type: 'bar',
+                          data: {
+                              labels: ['09/04/2022', '10/04/2022', '11/04/2022', '12/04/2022', '13/04/2022', '14/04/2022'],
+                              datasets: [{
+                                  label: 'จำนวนคัน',
+                                  data: [0, 0, 0, 0, 0, 0],
+                                  backgroundColor: [
+                                      'rgba(255, 99, 132, 0.2)',
+                                      'rgba(54, 162, 235, 0.2)',
+                                      'rgba(255, 206, 86, 0.2)',
+                                      'rgba(75, 192, 192, 0.2)',
+                                      'rgba(153, 102, 255, 0.2)',
+                                      'rgba(255, 159, 64, 0.2)'
+                                  ],
+                                  borderColor: [
+                                      'rgba(255, 99, 132, 1)',
+                                      'rgba(54, 162, 235, 1)',
+                                      'rgba(255, 206, 86, 1)',
+                                      'rgba(75, 192, 192, 1)',
+                                      'rgba(153, 102, 255, 1)',
+                                      'rgba(255, 159, 64, 1)'
+                                  ],
+                                  borderWidth: 1
+                              }]
+                          },
+                          options: {
+                              scales: {
+                                  y: {
+                                      beginAtZero: true
+                                  }
+                              }
+                          }
+                      });
+
+
+
+                      const ctx4 = document.getElementById('myChart4').getContext('2d');
+                      const myChart4 = new Chart(ctx4, {
+                          type: 'bar',
+                          data: {
+                              labels: ['09/04/2022', '10/04/2022', '11/04/2022', '12/04/2022', '13/04/2022', '14/04/2022'],
+                              datasets: [{
+                                  label: 'จำนวนคัน',
+                                  data: [2, 9, 0, 0, 0, 3],
+                                  backgroundColor: [
+                                      'rgba(255, 99, 132, 0.2)',
+                                      'rgba(54, 162, 235, 0.2)',
+                                      'rgba(255, 206, 86, 0.2)',
+                                      'rgba(75, 192, 192, 0.2)',
+                                      'rgba(153, 102, 255, 0.2)',
+                                      'rgba(255, 159, 64, 0.2)'
+                                  ],
+                                  borderColor: [
+                                      'rgba(255, 99, 132, 1)',
+                                      'rgba(54, 162, 235, 1)',
+                                      'rgba(255, 206, 86, 1)',
+                                      'rgba(75, 192, 192, 1)',
+                                      'rgba(153, 102, 255, 1)',
+                                      'rgba(255, 159, 64, 1)'
+                                  ],
+                                  borderWidth: 1
+                              }]
+                          },
+                          options: {
+                              scales: {
+                                  y: {
+                                      beginAtZero: true
+                                  }
+                              }
+                          }
+                      });
+
+                      const ctx5 = document.getElementById('myChart5').getContext('2d');
+                      const myChart5 = new Chart(ctx5, {
+                          type: 'bar',
+                          data: {
+                              labels: ['09/04/2022', '10/04/2022', '11/04/2022', '12/04/2022', '13/04/2022', '14/04/2022'],
+                              datasets: [{
+                                  label: 'จำนวนคัน',
+                                  data: [2, 9, 0, 0, 0, 3],
+                                  backgroundColor: [
+                                      'rgba(255, 99, 132, 0.2)',
+                                      'rgba(54, 162, 235, 0.2)',
+                                      'rgba(255, 206, 86, 0.2)',
+                                      'rgba(75, 192, 192, 0.2)',
+                                      'rgba(153, 102, 255, 0.2)',
+                                      'rgba(255, 159, 64, 0.2)'
+                                  ],
+                                  borderColor: [
+                                      'rgba(255, 99, 132, 1)',
+                                      'rgba(54, 162, 235, 1)',
+                                      'rgba(255, 206, 86, 1)',
+                                      'rgba(75, 192, 192, 1)',
+                                      'rgba(153, 102, 255, 1)',
+                                      'rgba(255, 159, 64, 1)'
+                                  ],
+                                  borderWidth: 1
+                              }]
+                          },
+                          options: {
+                              scales: {
+                                  y: {
+                                      beginAtZero: true
+                                  }
+                              }
+                          }
+                      });
+
+
+
+                      
+                    //   var total = parseInt(response.data[0].total)  + 
+                    //   parseInt(response.data[1].total) + 
+                    //   parseInt(response.data[2].total) + 
+                    //   parseInt(response.data[3].total);
+                    //   var htmlcard_0 = `
+                    //     <p class="card-text">วันนี้ ${response.data[0].today} คัน</p>
+                    //     <p class="card-text">สัปดาห์นี้ ${response.data[0].toweek} คัน</p>
+                    //     <p class="card-text">เดือนนี้ ${response.data[0].tomonth} คัน</p>
+                    //     <p class="card-text">ทั้งหมด ${response.data[0].total} คัน</p>
+                    //   `;
+                    //   var htmlcard_1 = `
+                    //     <p class="card-text">วันนี้ ${response.data[1].today} คัน</p>
+                    //     <p class="card-text">สัปดาห์นี้ ${response.data[1].toweek} คัน</p>
+                    //     <p class="card-text">เดือนนี้ ${response.data[1].tomonth} คัน</p>
+                    //     <p class="card-text">ทั้งหมด ${response.data[1].total} คัน</p>
+                    //   `;
+                    //   var htmlcard_2 = `
+                    //     <p class="card-text">วันนี้ ${response.data[2].today} คัน</p>
+                    //     <p class="card-text">สัปดาห์นี้ ${response.data[2].toweek} คัน</p>
+                    //     <p class="card-text">เดือนนี้ ${response.data[2].tomonth} คัน</p>
+                    //     <p class="card-text">ทั้งหมด ${response.data[2].total} คัน</p>
+                    //   `;
+                    //   var htmlcard_3 = `
+                    //     <p class="card-text">วันนี้ ${response.data[3].today} คัน</p>
+                    //     <p class="card-text">สัปดาห์นี้ ${response.data[3].toweek} คัน</p>
+                    //     <p class="card-text">เดือนนี้ ${response.data[3].tomonth} คัน</p>
+                    //     <p class="card-text">ทั้งหมด ${response.data[3].total} คัน</p>
+                    //     `;
+                    //   var htmlcard_total = `
+                    //   <p class="card-text">ทั้งหมด ${total} คัน</p>
+                    //   `;
+                    // appendHtml(document.getElementById("card-0"), htmlcard_0);
+                    // appendHtml(document.getElementById("card-1"), htmlcard_1);
+                    // appendHtml(document.getElementById("card-2"), htmlcard_2);
+                    // appendHtml(document.getElementById("card-3"), htmlcard_3);
+                    // appendHtml(document.getElementById("card-total"), htmlcard_total);
+                    });
+                  }
+              }
+          })();
+
+  jQuery(document).ready(function() {
+      Feature.getStatistics();
+  });
+</script>

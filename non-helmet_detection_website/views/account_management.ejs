@@ -1,0 +1,136 @@
+<%- include('../template/sidebar.ejs'); -%>
+    <main class="mt-5 pt-3">
+      <div class="container-fluid">
+        <div class="row">
+          <!-- table -->
+        <div class="row">
+          <div class="col-md-12 mb-3">
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h5 class="pt-2">ตารางแสดงข้อมูลผู้ใช้งาน</h5>
+                  </div>
+                  
+                </div>
+                </div>
+                <div class="table-responsive">
+                  <table id="table-user-account-id" class="table table-striped my-2" style="width: 100%">
+                    <thead class="table-navy-brown">
+                      <tr>
+                        <th class="text-center">รูปโปรไฟล์</th>
+                        <th class="text-center">อีเมล</th>
+                        <th class="text-center">ชื่อ</th>
+                        <th class="text-center">นามสกุล</th>
+                        <th class="text-center">อัปโหลดข้อมูลตรวจจับทั้งหมด</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- <tr>
+                        <td class="text-center">รูปภาพ</td>
+                        <td class="text-center">กค12120</td>
+                        <td class="text-center">la=1,lo=2</td>
+                        <td class="text-center">2011/04/25</td>
+                        <td class="text-center">ยังไม่ถูกพิจารณา</td>
+                        <td class="text-center">ข้อความหมายเหตุ</td>
+                      </tr> -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </main>
+  </body>
+</html>
+<script type="text/javascript" src="/node_modules/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="/node_modules/datatables.net/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="/node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+<script>
+  var Feature = (function(){
+      var dataTable = $('#table-user-account-id').DataTable({
+        language: {emptyTable: "ไม่พบข้อมูล"},
+          searching: false,
+          initComplete: function (settings, json) {  
+              $("#table-user-account-id").wrap("<div style='overflow:auto; width:100%; position:relative; min-height: 708px; max-height: 708px; background-color: #F9F9F9; margin-bottom: 5px;'></div> ");            
+          },
+          ordering: false,
+          lengthChange: false,
+          paging: false,
+          bAutoWidth: false,
+          columns:[
+            {
+              data : function(data){
+                if(data['image_profile'] != null || data['image_profile'] != undefined){
+                  return '<img class="logo" src="http://128.199.96.80:5000/profiles/' +data['image_profile']+' " style="height:90px;width:90px;"/>';
+                } else {
+                  return '<img class="img-account-profile rounded-circle mb-2" src="http://bootdey.com/img/Content/avatar/avatar1.png" style="height:90px;width:90px;"/>';
+                }
+              },
+              className : 'text-center',
+            },
+            {
+              data : function(data){
+                return  data['email'];
+              },
+              className : 'text-center',
+            },
+            {
+              data : function(data){
+                return  data['firstname'];
+              },
+              className : 'text-center',
+            },
+            {
+              data : function(data){
+                return  data['lastname'];
+              },
+              className : 'text-center',
+            },
+            {
+              data : function(data){
+                return  data['count_upload'];
+              },
+              className : 'text-center',
+            },
+          ],
+          serverSide: true,
+          ajaxSource: '/useraccount/search',
+          serverData: function (sSource, aaData, fnCallback, oSettings) {
+                // aaData.push({ "name": "search", "value": aaSearch});
+                oSettings.jqXHR = $.ajax({
+                    dataType: 'json',
+                    type: "POST",
+                    url: sSource,
+                    data: aaData,
+                    success: function (response) {
+                        // if (response.status === "Succeed") {
+                        //   var response = response.data;
+                        //       response = {"aaData": response, "iTotalRecords": response.length, "iTotalDisplayRecords": response.length};
+
+                        // } else {
+                        //     response = {"aaData":[], "iTotalRecords": 0, "iTotalDisplayRecords": 0};
+                        // }
+                        fnCallback(response);
+                    }
+                });
+          },
+      });
+          
+      return {
+          
+          init: function () {
+          }
+      }
+  })();
+
+  jQuery(document).ready(function () {
+    Feature.init();
+    
+  });  
+</script>

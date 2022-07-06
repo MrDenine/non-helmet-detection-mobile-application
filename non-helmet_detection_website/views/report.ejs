@@ -1,0 +1,154 @@
+<%- include('../template/sidebar.ejs'); -%>
+    <main class="mt-5 pt-3">
+      <div class="container-fluid">
+        <div class="row">
+          <!-- table -->
+          <div class="col-md-12 mb-3">
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h5 class="pt-2">ตารางรายงาน</h5>
+                  </div>
+                  <div class="col-md-3 mb-3">
+                    <input type="text" class="form-control shadow-sm" id="equipmentSearch" placeholder="ค้นหาข้อมูลป้ายทะเบียน, สถานะ">
+                </div>
+                <div class="col-md-2 mb-3">
+                    <div class="btn btn-outline-secondary shadow-sm" id="clear"><i class="fas fa-times me-2"></i>ยกเลิก</div>
+                    <div class="btn btn-success shadow-sm" id="search"><i class="fas fa-search me-2"></i>ค้นหา</div>
+                </div>
+                </div>
+                </div>
+                <div class="table-responsive">
+                  <table id="table-report-id" class="table table-striped my-2" style="width: 100%">
+                    <thead class="table-navy-brown">
+                      <tr>
+                        <th class="text-center">วันเวลาแก้ไขข้อมูล</th>
+                        <th class="text-center">รูป</th>
+                        <th class="text-center">ป้ายทะเบียน</th>
+                        <th class="text-center">สถานะ</th>
+                        <th class="text-center">หมายเหตุ</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- <tr>
+                        <td class="text-center">รูปภาพ</td>
+                        <td class="text-center">กค12120</td>
+                        <td class="text-center">la=1,lo=2</td>
+                        <td class="text-center">2011/04/25</td>
+                        <td class="text-center">ยังไม่ถูกพิจารณา</td>
+                        <td class="text-center">ข้อความหมายเหตุ</td>
+                      </tr> -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
+<script type="text/javascript" src="/node_modules/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="/node_modules/datatables.net/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="/node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+<script>
+  var Feature = (function(){
+      var dataTable = $('#table-report-id').DataTable({
+        language: {emptyTable: "ไม่พบข้อมูลรายงาน"},
+          searching: false,
+          initComplete: function (settings, json) {  
+              $("#table-report-id").wrap("<div style='overflow:auto; width:100%; position:relative; min-height: 708px; max-height: 708px; background-color: #F9F9F9; margin-bottom: 5px;'></div> ");            
+          },
+          ordering: false,
+          lengthChange: false,
+          paging: false,
+          bAutoWidth: false,
+          columns:[
+            {
+              data : function(data){
+                var date = new Date(data['update_at']).toLocaleDateString();
+                var time = new Date(data['update_at']).toLocaleTimeString('th', {
+                                        timeZone: 'Asia/Jakarta',
+                                        timeStyle: 'short',
+                                        hour12: false,
+                                    });
+                return date + ' ' + time;
+              },
+              className : 'text-center',
+            },
+            {
+              data : function(data){
+                return '<img class="logo" src="http://128.199.96.80:5000/detectedImage/' +data['image_detection']+' " style="height:320px;width:160px;"/>';
+              },
+              className : 'text-center',
+            },
+            {
+              data : function(data){
+                return data['licence_number'];
+              },
+              className : 'text-center',
+            },
+            {
+              data : function(data){
+                switch(data['status']) {
+                  case 10:
+                    return "“ยังไม่ถูกพิจารณา”";
+                    break;
+                  case 20:
+                    return "“ถูกพิจารณาแล้ว”";
+                    break;
+                  case 30:
+                    return "“ถูกดำเนินคดีแล้ว”";
+                    break;
+                  default:
+                    return "“ไม่สามารถตรวจสอบได้”";
+                }
+              },
+              className : 'text-center',
+            },
+            {
+              data : function(data){
+                return data['description'];
+              },
+              className : 'text-center',
+            },
+          ],
+          serverSide: true,
+          ajaxSource: '/report/search',
+          serverData: function (sSource, aaData, fnCallback, oSettings) {
+                // aaData.push({ "name": "search", "value": aaSearch});
+                oSettings.jqXHR = $.ajax({
+                    dataType: 'json',
+                    type: "POST",
+                    url: sSource,
+                    data: aaData,
+                    success: function (response) {
+                        if (response.status === "Succeed") {
+                          var response = response.data;
+                              response = {"aaData": response, "iTotalRecords": response.length, "iTotalDisplayRecords": response.length};
+
+                        } else {
+                            response = {"aaData":[], "iTotalRecords": 0, "iTotalDisplayRecords": 0};
+                        }
+                        fnCallback(response);
+                    }
+                });
+          },
+      });
+          
+      return {
+          
+          init: function () {
+          }
+      }
+  })();
+
+  jQuery(document).ready(function () {
+    Feature.init();
+    
+  });  
+</script>

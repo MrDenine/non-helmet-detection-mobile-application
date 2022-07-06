@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/public/stylesheets/index.css">
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <title>None Helmet Capture --Project Computer Engineering</title>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<header>
+<div class="container">
+    <div class="row h-100">
+        <div class="col-sm-12 my-auto">
+            <div class="row">
+                <div class="title text-center">
+                    <h1>None Helmet Capture</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div  class="text-center">
+                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#signinModal">เข้าสู่ระบบ</button>
+                        <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#registerModal">ลงทะเบียน</button>
+                    </div>
+                    <!-- Modal Signin -->
+                    <div class="modal fade" id="signinModal" >
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">เข้าสู่ระบบ</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="needs-validation-signin "novalidate>
+                                        <div class="mb-3">
+                                            <label class="form-label">อีเมล</label>
+                                            <input type="email" class="form-control" id="SigninUsername" name="SigninUsername" placeholder="mymail@mail.com" required />
+                                            <div class="invalid-feedback">
+                                                กรุณากรอกอีเมล
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">รหัสผ่าน</label>
+                                            <input type="password" class="form-control" id="SigninPassword" name="SigninPassword" placeholder="******" required/>
+                                            <div class="invalid-feedback">
+                                                กรุณากรอกรหัสผ่าน
+                                            </div>
+                                        </div>
+                                        <!-- <div class="mb-3 form-check">
+                                            <input type="checkbox" class="form-check-input" id="rememberMe" />
+                                            <label class="form-check-label" for="rememberMe">Remember me</label>
+                                        </div> -->
+                                        <div class="modal-footer d-block">
+                                            <p class="float-start"><a href="/forgotPassword">ลืมรหัสผ่าน</a></p>
+                                            <button type="submit" class="btn btn-warning float-end" id="btn-signin-submit">ยืนยัน</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modal Register -->
+                    <div class="modal fade" id="registerModal" >
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">ลงทะเบียน</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="needs-validation-register "novalidate>
+                                        <div class="mb-3">
+                                            <label class="form-label">ชื่อ</label>
+                                            <input type="text" class="form-control" id="Firstname" name="Firstname" placeholder="ชื่อ" required/>
+                                            <div class="invalid-feedback">
+                                                กรุณากรอกชื่อ
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">นามสกุล</label>
+                                            <input type="text" class="form-control" id="Lastname" name="Lastname" placeholder="นามสกุล" required/>
+                                            <div class="invalid-feedback">
+                                                กรุณากรอกนามสกุล
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">อีเมล</label>
+                                            <input type="email" class="form-control" id="RegisterUsername" name="RegisterUsername" placeholder="อีเมล" required/>
+                                            <div class="invalid-feedback">
+                                                กรุณากรอกอีเมล
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">รหัสผ่าน</label>
+                                            <input type="password" class="form-control" id="RegisterPassword" name="RegisterPassword" pattern=".{6,}" placeholder="รหัสผ่าน" required/>
+                                            <div class="invalid-feedback">
+                                                รหัสผ่านอย่างน้อย 6 ตัวอักษร
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">ยืนยันรหัสผ่าน</label>
+                                            <input type="password" class="form-control" id="ConfirmRegisterPassword" name="ConfirmRegisterPassword" placeholder="ยืนยันรหัสผ่าน" required oninput="check(this)" />
+                                            <div class="invalid-feedback">
+                                                รหัสผ่านไม่ตรงกัน
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer d-block">
+                                            <!-- <p class="float-start">Have account <a href="#">Signin</a></p> -->
+                                            <button type="submit" class="btn btn-warning float-end" id="btn-register-submit">ลงทะเบียน</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+</body>
+</html>
+<script type="text/javascript" src="/node_modules/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+<script>
+    //check Is Password match confirmPassword
+    function check(input) {
+        if (input.value != document.getElementById('RegisterPassword').value) {
+            input.setCustomValidity('รหัสผ่านไม่ตรงกัน');
+        } else {
+            // input is valid -- reset the error message
+            input.setCustomValidity('');
+        }
+    }
+    
+    var Feature = (function() {
+                //global space
+                var date = new Date();
+                var datetime = date.getFullYear()+ "-" +
+                        ("0" + (date.getUTCMonth()+1)).slice(-2) + "-" +
+                        ("0" + date.getUTCDate()).slice(-2) + " " +
+                        ("0" + date.getUTCHours()).slice(-2) + ":" +
+                        ("0" + date.getUTCMinutes()).slice(-2) + ":" +
+                        ("0" + date.getUTCSeconds()).slice(-2);
+                return {
+                    //function space
+                    init: function() {
+                        console.log(datetime);
+                    },
+                    onSubmitFormSignin : function(){
+                        //validation signin form
+                        'use strict'
+                        var forms = document.querySelectorAll('.needs-validation-signin')
+                        Array.prototype.slice.call(forms)
+                            .forEach(function (form) {
+                                form.addEventListener('submit', function (event) {
+                                    if (!form.checkValidity()) {
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                    }else{
+                                        //pass
+                                        $.ajax({
+                                            url:"/login",
+                                            type:"POST",
+                                            data:{
+                                                Username:$('#SigninUsername').val(),
+                                                Password:$('#SigninPassword').val()
+                                            },
+                                            success : function (response) {
+                                                if(response.status === 'Failed'){
+                                                    if(response.data === 'Incorrect password'){
+                                                        Swal.fire(
+                                                        'ไม่สามารถเข้าสู่ระบบได้',
+                                                        'อีเมลหรือรหัสผ่านของคุณไม่ถูกต้อง',
+                                                        'warning'
+                                                        )
+                                                    } else if (response.data === 'Invalid email'){
+                                                        Swal.fire(
+                                                        'ไม่สามารถเข้าสู่ระบบได้',
+                                                        'กรุณาลงทะเบียนเข้าใช้งาน',
+                                                        'warning'
+                                                        )
+                                                    } else if (response.data === 'Email is not verified'){
+                                                        Swal.fire(
+                                                        'ไม่สามารถเข้าสู่ระบบได้',
+                                                        'กรุณายืนยันอีเมลก่อน',
+                                                        'warning'
+                                                        ).then(function(){
+                                                            window.location.href = 'http://localhost:8000/otp/'+response.userID +'/'+ $('#SigninUsername').val();
+                                                        })
+                                                    }
+                                                } else if (response.status === 'Succeed'){
+                                                    window.location.href = 'http://localhost:8000/dashboard';
+                                                }else {
+                                                    console.log(response);
+                                                }
+                                            }
+                                        })
+                                    }
+                                    form.classList.add('was-validated')
+                                    event.preventDefault();
+                                })
+                            })
+                    },
+                    onSubmitFormRegister : function(){
+                        //validation register form
+                        'use strict'
+                        var forms = document.querySelectorAll('.needs-validation-register')
+                        Array.prototype.slice.call(forms)
+                            .forEach(function (form) {
+                                form.addEventListener('submit', function (event) {
+                                    if (!form.checkValidity()) {
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                    }else{
+                                        //pass
+                                        $.ajax({
+                                            url:"/register",
+                                            type:"POST",
+                                            dataType: "json",
+                                            data:{
+                                                Email:$('#RegisterUsername').val(),
+                                                Firstname:$('#Firstname').val(),
+                                                Lastname:$('#Lastname').val(),
+                                                Password:$('#RegisterPassword').val(),
+                                                Datetime:datetime,
+                                            },
+                                            success : function (response) {
+                                                console.log(response);
+                                                if(response.status === 'Failed'){
+                                                    if(response.status.data === 'Duplicate_Email'){
+                                                        Swal.fire(
+                                                        'ไม่สามารถลงมะเบียนได้',
+                                                        'อีเมลนี้ถูกใช้งานแล้ว กรุณาใช้อีเมลอื่น',
+                                                        'warning'
+                                                        )
+                                                    }
+                                                } else if(response.status === "Succeed"){
+                                                    Swal.fire({
+                                                        icon :  'success',
+                                                        title : 'ลงทะเบียนสำเร็จ',
+                                                    }).then(function(){
+                                                        window.location.href = 'http://localhost:8000/otp/'+response.data[0].user_id+'/'+$('#RegisterUsername').val();
+                                                    })
+                                                }
+                                            },
+                                            error: function(e) {
+                                                console.log(e);
+                                            },
+                                        })
+                                    }
+                                    form.classList.add('was-validated')
+                                    event.preventDefault();
+                                })
+                            })
+                    },
+                }
+            })();
+
+    jQuery(document).ready(function() {
+        Feature.init();
+        Feature.onSubmitFormSignin();
+        Feature.onSubmitFormRegister();
+    });
+</script>
