@@ -6,7 +6,4 @@
   ![](https://github.com/MrDenine/non-helmet-detection-mobile-application/blob/main/preview/gif/2.gif)
   
   ![](https://github.com/MrDenine/non-helmet-detection-mobile-application/blob/main/preview/gif/3.gif)
-  
-  ### Description
-  
-  ### Contact
+ 
